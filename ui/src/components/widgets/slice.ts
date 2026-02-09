@@ -25,8 +25,9 @@ import {
 
 interface SliceRefAttrs {
   readonly trace: Trace;
-  readonly id: SliceSqlId;
+  readonly id: SliceSqlId | number;
   readonly name: string;
+  readonly table?: string;
 
   // Whether clicking on the reference should change the current tab
   // to "current selection" tab in addition to updating the selection
@@ -41,11 +42,15 @@ export class SliceRef implements m.ClassComponent<SliceRefAttrs> {
       {
         icon: Icons.UpdateSelection,
         onclick: () => {
-          vnode.attrs.trace.selection.selectSqlEvent('slice', vnode.attrs.id, {
-            switchToCurrentSelectionTab:
-              vnode.attrs.switchToCurrentSelectionTab,
-            scrollToSelection: true,
-          });
+          vnode.attrs.trace.selection.selectSqlEvent(
+            vnode.attrs.table ?? 'slice',
+            vnode.attrs.id,
+            {
+              switchToCurrentSelectionTab:
+                vnode.attrs.switchToCurrentSelectionTab,
+              scrollToSelection: true,
+            },
+          );
         },
       },
       vnode.attrs.name,
